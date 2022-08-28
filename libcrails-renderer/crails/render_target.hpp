@@ -11,7 +11,7 @@ namespace Crails
   public:
     virtual void set_header(const std::string&, const std::string&) {}
     virtual void set_body(const char* str, size_t size) = 0;
-    void         set_body(const std::string& body) { set_body(body.c_str(), body.length(); }
+    void         set_body(const std::string& body) { set_body(body.c_str(), body.length()); }
   };
 
   class RenderString : public RenderTarget

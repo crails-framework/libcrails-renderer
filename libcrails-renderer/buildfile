@@ -1,5 +1,4 @@
-import libs += libdatatree%lib{datatree}
-import libs += libbacktrace%lib{backtrace}
+import intf_libs += libdatatree%lib{datatree}
 
 lib{crails-renderer}: {hxx ixx txx cxx}{**} $impl_libs $intf_libs
 
@@ -12,7 +11,7 @@ cxx.poptions =+ "-I$out_root" "-I$src_root"
 
 lib{crails-renderer}:
 {
-  cxx.export.poptions = "-I$out_root" "-I$src_root"
+  cxx.export.poptions = "-I$out_root/libcrails-renderer/" "-I$src_root/libcrails-renderer/"
   cxx.export.libs = $intf_libs
 }
 
@@ -26,6 +25,6 @@ else
 
 {hxx ixx txx}{*}:
 {
-  install         = include/crails/
+  install         = include/
   install.subdirs = true
 }
