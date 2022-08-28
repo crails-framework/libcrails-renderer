@@ -1,0 +1,31 @@
+import libs += libdatatree%lib{datatree}
+import libs += libbacktrace%lib{backtrace}
+
+lib{crails-renderer}: {hxx ixx txx cxx}{**} $impl_libs $intf_libs
+
+hxx{export}@./: cxx.importable = false
+
+cxx.poptions =+ "-I$out_root" "-I$src_root"
+
+{hbmia obja}{*}: cxx.poptions += -DLIBCRAILS_RENDERER_STATIC_BUILD
+{hbmis objs}{*}: cxx.poptions += -DLIBCRAILS_RENDERER_SHARED_BUILD
+
+lib{crails-renderer}:
+{
+  cxx.export.poptions = "-I$out_root" "-I$src_root"
+  cxx.export.libs = $intf_libs
+}
+
+liba{crails-renderer}: cxx.export.poptions += -DLIBCRAILS_RENDERER_STATIC
+libs{crails-renderer}: cxx.export.poptions += -DLIBCRAILS_RENDERER_SHARED
+
+if $version.pre_release
+  lib{crails-renderer}: bin.lib.version = "-$version.project_id"
+else
+  lib{crails-renderer}: bin.lib.version = "-$version.major.$version.minor"
+
+{hxx ixx txx}{*}:
+{
+  install         = include/crails/
+  install.subdirs = true
+}
