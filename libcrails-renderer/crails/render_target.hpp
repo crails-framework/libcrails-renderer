@@ -17,10 +17,12 @@ namespace Crails
   class RenderString : public RenderTarget
   {
   public:
-    void set_body(const char* str, size_t size) { body = std::string_view(str, size); }
-    std::string_view value() const { return body; }
+    void set_body(const char* str, std::size_t size) { body = std::string(str, size); }
+    std::string_view value() const { return std::string_view(body.c_str(), body.length()); }
+    const char* c_str() const { return body.c_str(); }
+    std::size_t length() const { return body.length(); }
   private:
-    std::string_view body;
+    std::string body;
   };
 }
 
