@@ -1,3 +1,4 @@
+import libs += libboost-any%lib{boost_any}
 import intf_libs += libdatatree%lib{datatree}
 
 lib{crails-renderer}: {hxx ixx txx cxx}{**} $impl_libs $intf_libs
