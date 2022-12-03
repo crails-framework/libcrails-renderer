@@ -31,7 +31,7 @@ namespace Crails
   class Renderer
   {
   protected:
-    typedef std::string (*Generator)(const Renderer*, SharedVars&);
+    typedef void (*Generator)(const Renderer&, RenderTarget&, SharedVars&);
     typedef std::map<std::string, Generator> Templates;
 
   public:
@@ -42,10 +42,9 @@ namespace Crails
     virtual bool can_render(const std::string& accept_header, const std::string& view) const = 0;
     virtual void render_template(const std::string& view, RenderTarget&, SharedVars& vars) const = 0;
 
-    static Renderer*   pick_renderer(const std::string& view, Data params);
-    static bool        can_render(const std::string& view, Data params);
-    static void        render(const std::string& view, Data params, RenderTarget&, SharedVars& vars);
-    static std::string partial(const std::string& view);
+    static Renderer*   pick_renderer(const std::string& view, const std::string& accept);
+    static bool        has_renderer(const std::string& view, const std::string& accept);
+    static void        render(const std::string& view, const std::string& accept, RenderTarget&, SharedVars& vars);
     const Templates&   get_templates() const { return templates; }
 
   protected:
