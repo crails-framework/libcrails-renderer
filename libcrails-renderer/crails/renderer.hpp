@@ -40,7 +40,6 @@ namespace Crails
     Renderers() {}
     virtual ~Renderers() {}
   public:
-
     RendererList::const_iterator begin() const { return renderers.begin(); }
     RendererList::const_iterator end() const { return renderers.end(); }
     const std::string& get_default_format() const { return default_format; }
@@ -60,6 +59,7 @@ namespace Crails
     virtual bool can_render(const std::string& accept_header, const std::string& view) const = 0;
     virtual void render_template(const std::string& view, RenderTarget&, SharedVars& vars) const = 0;
     const Templates& get_templates() const { return templates; }
+    void merge(const Renderer&);
 
     static const Renderer* pick_renderer(const std::string& view, const std::string& accept);
     static bool            has_renderer(const std::string& view, const std::string& accept);

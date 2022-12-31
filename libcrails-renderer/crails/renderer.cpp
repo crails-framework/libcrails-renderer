@@ -41,3 +41,9 @@ bool Renderer::has_renderer(const std::string& view, const string& accept)
 {
   return pick_renderer(view, accept) != nullptr;
 }
+
+void Renderer::merge(const Renderer& other)
+{
+  for (const auto& entry : other.templates)
+    templates.emplace(entry.first, entry.second);
+}
