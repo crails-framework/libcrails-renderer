@@ -12,22 +12,17 @@
 
 namespace Crails
 {
+  class Renderer;
+
   struct MissingTemplate : public boost_ext::exception
   {
-    MissingTemplate(const std::string& name, const std::string& accept) :
-      name(name),
-      message("Template not found: '" + name + "' with format '" + accept + '\'')
-    {
-    }
-
-    MissingTemplate(const std::string& name) :
-      name(name),
-      message("Template not found: '" + name + "'")
-    {
-    }
+    MissingTemplate(const std::string& name, const std::string& accept, const Renderer* = nullptr);
+    MissingTemplate(const std::string& name, const Renderer* = nullptr);
 
     const char* what() const throw() { return message.c_str(); }
+    void debug() const;
     std::string name, message;
+    const Renderer* renderer;
   };
 
   class Renderer;
@@ -51,6 +46,7 @@ namespace Crails
 
   class Renderer
   {
+    friend class MissingTemplate;
   protected:
     typedef void (*Generator)(const Renderer&, RenderTarget&, SharedVars&);
     typedef std::map<std::string, Generator> Templates;

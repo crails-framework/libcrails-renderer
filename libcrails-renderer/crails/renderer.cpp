@@ -1,4 +1,5 @@
 #include <iostream>
+#include <crails/logger.hpp>
 #include "renderer.hpp"
 
 using namespace Crails;
@@ -46,4 +47,24 @@ void Renderer::merge(const Renderer& other)
 {
   for (const auto& entry : other.templates)
     templates.emplace(entry.first, entry.second);
+}
+
+MissingTemplate::MissingTemplate(const string& name, const string& accept, const Renderer* renderer)
+  : name(name), message("Template not found '" + name + "' with format '" + accept + '\''), renderer(renderer)
+{
+  if (renderer) debug();
+}
+
+MissingTemplate::MissingTemplate(const string& name, const Renderer* renderer)
+  : name(name), message("Template not found '" + name + '\''), renderer(renderer)
+{
+  if (renderer) debug();
+}
+
+void MissingTemplate::debug() const
+{
+  logger << Logger::Error << message << ": Available templates were:\n";
+  for (const auto& entry : renderer->templates)
+    logger << " - " << entry.first << '\n';
+  logger << Logger::endl;
 }
