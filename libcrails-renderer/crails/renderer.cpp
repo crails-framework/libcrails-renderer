@@ -46,7 +46,14 @@ bool Renderer::has_renderer(const std::string& view, const string& accept)
 void Renderer::merge(const Renderer& other)
 {
   for (const auto& entry : other.templates)
-    templates.emplace(entry.first, entry.second);
+  {
+    auto item = templates.find(entry.first);
+
+    if (item == templates.end())
+      templates.emplace(entry.first, entry.second);
+    else
+      item->second = entry.second;
+  }
 }
 
 MissingTemplate::MissingTemplate(const string& name, const string& accept, const Renderer* renderer)
