@@ -11,25 +11,33 @@ namespace Crails
   typedef std::map<std::string, boost::any> SharedVars;
 
   template<typename T>
-  T cast(const SharedVars& vars, const std::string& name)
+  struct SharedVarsCaster
   {
-    boost::any var;
-
-    try
+    static T cast(const boost::any& var)
     {
-      var = vars.at(name);
-
       return boost::any_cast<T>(var);
     }
-    catch (std::out_of_range& e)
+  };
+
+  void throw_cast_failure(const std::string& varname, const std::type_info& provided, const std::type_info& expected);
+
+  template<typename T>
+  T cast(const SharedVars& vars, const std::string& name)
+  {
+    SharedVars::const_iterator var = vars.find(name);
+
+    if (var == vars.end())
     {
       std::string message = "cannot find shared variable `" + name + '`';
-
       throw boost_ext::out_of_range(message.c_str());
+    }
+    try
+    {
+      return SharedVarsCaster<T>::cast(var->second);
     }
     catch (boost::bad_any_cast& e)
     {
-      throw boost_ext::runtime_error("could not cast `" + name + "` from " + var.type().name() + " to " + typeid(T).name());
+      throw_cast_failure(name, var->second.type(), typeid(T));
     }
   }
 
@@ -41,5 +49,7 @@ namespace Crails
     return default_value;
   }
 }
+
+# include "shared_vars_string_cast.hpp"
 
 #endif
