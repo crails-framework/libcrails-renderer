@@ -39,6 +39,7 @@ namespace Crails
     {
       throw_cast_failure(name, var->second.type(), typeid(T));
     }
+    return SharedVarsCaster<T>::cast(var->second); // unreachable, but prevents return-type warnings
   }
 
   template<typename T>
