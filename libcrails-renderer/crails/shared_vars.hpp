@@ -10,6 +10,8 @@ namespace Crails
 {
   typedef std::map<std::string, boost::any> SharedVars;
 
+  SharedVars merge(SharedVars, const SharedVars&);
+
   template<typename T>
   struct SharedVarsCaster
   {

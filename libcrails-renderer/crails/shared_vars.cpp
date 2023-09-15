@@ -1,11 +1,24 @@
 #include "shared_vars.hpp"
+
+using namespace std;
+
+namespace Crails
+{
+  SharedVars merge(SharedVars vars, const SharedVars& second)
+  {
+    for (const auto& var : second)
+    {
+      if (vars.find(var.first) == vars.end())
+        vars.emplace(var.first, var.second);
+    }
+    return vars;
+  }
+}
+
 #ifdef __GNUG__
 #include <cstdlib>
 #include <memory>
 #include <cxxabi.h>
-
-using namespace std;
-
 namespace Crails
 {
   void throw_cast_failure(const string& varname, const type_info& provided, const type_info& expected)
@@ -23,8 +36,6 @@ namespace Crails
 }
 
 #else
-
-using namespace std;
 
 namespace Crails
 {
