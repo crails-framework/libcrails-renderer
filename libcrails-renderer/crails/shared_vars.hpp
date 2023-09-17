@@ -22,6 +22,7 @@ namespace Crails
   };
 
   void throw_cast_failure(const std::string& varname, const std::type_info& provided, const std::type_info& expected);
+  void throw_out_of_range_failure(const SharedVars& vars, const std::string& varname);
 
   template<typename T>
   T cast(const SharedVars& vars, const std::string& name)
@@ -30,8 +31,7 @@ namespace Crails
 
     if (var == vars.end())
     {
-      std::string message = "cannot find shared variable `" + name + '`';
-      throw boost_ext::out_of_range(message.c_str());
+      throw_out_of_range_failure(vars, name);
     }
     try
     {

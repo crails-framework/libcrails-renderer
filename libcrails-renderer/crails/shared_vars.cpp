@@ -1,4 +1,8 @@
 #include "shared_vars.hpp"
+#include <crails/logger.hpp>
+#include <sstream>
+#include <functional>
+#include <typeinfo>
 
 using namespace std;
 
@@ -12,6 +16,24 @@ namespace Crails
         vars.emplace(var.first, var.second);
     }
     return vars;
+  }
+
+  string output_vars_list(const SharedVars& vars)
+  {
+    stringstream stream;
+
+    stream << "Debugging available SharedVars:" << std::endl;
+    for (const auto& var : vars)
+      stream << "- " << var.first << " (" << var.second.type().name() << ')' << std::endl;
+    return stream.str();
+  }
+
+  void throw_out_of_range_failure(const SharedVars& vars, const string& varname)
+  {
+    string message = "cannot find shared variable `" + varname + '`';
+
+    logger << Logger::Debug << std::bind(&output_vars_list, vars) << Logger::endl;
+    throw boost_ext::out_of_range(message.c_str());
   }
 }
 
