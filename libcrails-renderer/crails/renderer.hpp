@@ -40,7 +40,7 @@ namespace Crails
     const std::string& get_default_format() const { return default_format; }
 
   protected:
-    std::string  default_format = "*";
+    std::string  default_format = "*/*";
     RendererList renderers;
   };
 
@@ -52,7 +52,8 @@ namespace Crails
     typedef std::map<std::string, Generator> Templates;
   public:
     virtual ~Renderer() {}
-    virtual bool can_render(const std::string& accept_header, const std::string& view) const = 0;
+    virtual const std::vector<std::string>& get_mimetypes() const = 0;
+    virtual bool can_render(const std::string& view) const;
     virtual void render_template(const std::string& view, RenderTarget&, SharedVars& vars) const = 0;
     const Templates& get_templates() const { return templates; }
     void merge(const Renderer&);
