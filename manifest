@@ -11,4 +11,3 @@ depends: * bpkg >= 0.15.0
 depends: { libcrails-logger libcrails-design-patterns } ^2.0.0
 depends: libbacktrace ^1.0.0
 depends: libdatatree ^2.0.0
-depends: libboost-any >= 1.74.0

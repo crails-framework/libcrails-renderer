@@ -1,4 +1,3 @@
-import libs += libboost-any%lib{boost_any}
 import intf_libs += libdatatree%lib{datatree}
 import intf_libs += libcrails-logger%lib{crails-logger}
 import intf_libs += libcrails-design-patterns%lib{crails-design-patterns}

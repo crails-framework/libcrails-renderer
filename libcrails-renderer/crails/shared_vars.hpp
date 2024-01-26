@@ -3,21 +3,21 @@
 
 # include <string>
 # include <map>
-# include <boost/any.hpp>
+# include <any>
 # include <crails/utils/backtrace.hpp> 
 
 namespace Crails
 {
-  typedef std::map<std::string, boost::any> SharedVars;
+  typedef std::map<std::string, std::any> SharedVars;
 
   SharedVars merge(SharedVars, const SharedVars&);
 
   template<typename T>
   struct SharedVarsCaster
   {
-    static T cast(const boost::any& var)
+    static T cast(const std::any& var)
     {
-      return boost::any_cast<T>(var);
+      return std::any_cast<T>(var);
     }
   };
 
@@ -37,7 +37,7 @@ namespace Crails
     {
       return SharedVarsCaster<T>::cast(var->second);
     }
-    catch (boost::bad_any_cast& e)
+    catch (std::bad_any_cast& e)
     {
       throw_cast_failure(name, var->second.type(), typeid(T));
     }
