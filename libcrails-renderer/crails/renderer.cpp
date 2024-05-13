@@ -16,6 +16,8 @@ static bool find_in_string(const string& a, const string& b)
 
 static string get_format(const string& format, const string& default_format)
 {
+  if (format.length() == 0)
+    logger << Logger::Debug << "Renderer: get_format: query did not include a format, using default: " << default_format << Logger::endl;
   return format.length() == 0 ? default_format : format;
 }
 
@@ -96,7 +98,7 @@ const Renderer* Renderer::pick_renderer(const string& view, const string& accept
         logger << Logger::Debug << "Renderer::pick_renderer: picked "
                << std::bind(&debug_renderer_identifier, result)
                << " for " << view << " with formats " << accepted_format
-               << " (out of accepted formats: " << format << Logger::endl;
+               << " (out of accepted formats: `" << accept << "`)" << Logger::endl;
         return result;
       }
     }
