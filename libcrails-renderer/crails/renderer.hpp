@@ -4,6 +4,7 @@
 # include <list>
 # include <map>
 # include <memory>
+# include <string_view>
 # include <crails/utils/singleton.hpp>
 # include <crails/utils/backtrace.hpp>
 # include <crails/datatree.hpp>
@@ -52,6 +53,7 @@ namespace Crails
     typedef std::map<std::string, Generator> Templates;
   public:
     virtual ~Renderer() {}
+    virtual std::string_view get_name() const = 0;
     virtual const std::vector<std::string>& get_mimetypes() const = 0;
     virtual bool can_render(const std::string& view) const;
     virtual void render_template(const std::string& view, RenderTarget&, SharedVars& vars) const = 0;

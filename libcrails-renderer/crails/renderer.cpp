@@ -1,6 +1,7 @@
 #include <iostream>
 #include <crails/logger.hpp>
 #include <crails/utils/split.hpp>
+#include <crails/utils/join.hpp>
 #include "renderer.hpp"
 
 using namespace Crails;
@@ -54,6 +55,15 @@ static const Renderer* pick_renderer_with_filter(const Renderers& renderers, con
   return nullptr;
 }
 
+static std::string debug_renderer_identifier(const Renderer* renderer)
+{
+  if (renderer)
+  {
+    return '<' + std::string(renderer->get_name()) + '(' + Crails::join(renderer->get_mimetypes(), ';') + ")>";
+  }
+  return "<no renderer>";
+}
+
 void Renderer::render(const std::string& view, const string& accept, RenderTarget& target, SharedVars& vars)
 {
   const Renderer* renderer = pick_renderer(view, accept);
@@ -82,7 +92,13 @@ const Renderer* Renderer::pick_renderer(const string& view, const string& accept
       const Renderer* result = pick_renderer_with_filter(*renderers, view, accepted_format, matcher);
 
       if (result)
+      {
+        logger << Logger::Debug << "Renderer::pick_renderer: picked "
+               << std::bind(&debug_renderer_identifier, result)
+               << " for " << view << " with formats " << accepted_format
+               << " (out of accepted formats: " << format << Logger::endl;
         return result;
+      }
     }
   }
   return nullptr;
@@ -127,7 +143,7 @@ void MissingTemplate::debug() const
 {
   if (renderer)
   {
-    logger << Logger::Error << message << ": Available templates were:\n";
+    logger << Logger::Error << message << ": Available templates for renderer `" << std::bind(&debug_renderer_identifier, renderer) << "` were:\n";
     for (const auto& entry : renderer->templates)
       logger << " - " << entry.first << '\n';
     logger << Logger::endl;
