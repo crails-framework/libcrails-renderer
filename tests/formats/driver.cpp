@@ -8,6 +8,7 @@ struct StubRenderer : public Crails::Renderer
   unsigned int id;
   std::vector<std::string> mimetypes;
 
+  std::string_view get_name() const override { return "StubRenderer"; }
   const std::vector<std::string>& get_mimetypes() const override { return mimetypes; }
   bool can_render(const std::string&) const override { return true; }
   void render_template(const std::string& view, Crails::RenderTarget&, Crails::SharedVars& vars) const override {}

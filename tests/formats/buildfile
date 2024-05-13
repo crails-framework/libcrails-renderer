@@ -1,0 +1,4 @@
+import libs += libcrails-renderer%lib{crails-renderer}
+import libs += libbacktrace%lib{backtrace}
+
+exe{driver}: {hxx ixx txx cxx}{**} $libs testscript{**}
