@@ -8,6 +8,6 @@ url: https://github.com/crails-framework/libcrails-renderer.git
 email: michael@unetresgrossebite.com
 depends: * build2 >= 0.15.0
 depends: * bpkg >= 0.15.0
-depends: { libcrails-logger libcrails-design-patterns libcrails-semantics} ^2.0.0
+depends: { libcrails-any libcrails-logger libcrails-design-patterns libcrails-semantics} ^2.0.0
 depends: libbacktrace ^1.0.0
 depends: libdatatree ^2.0.0

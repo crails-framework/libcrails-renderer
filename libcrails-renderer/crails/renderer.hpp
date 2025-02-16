@@ -8,7 +8,7 @@
 # include <crails/utils/singleton.hpp>
 # include <crails/utils/backtrace.hpp>
 # include <crails/datatree.hpp>
-# include "shared_vars.hpp"
+# include <crails/shared_vars.hpp>
 # include "render_target.hpp"
 
 namespace Crails
