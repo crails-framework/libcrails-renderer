@@ -12,6 +12,7 @@ namespace Crails
   public:
     virtual void set_header(const std::string&, const std::string&) {}
     virtual void set_body(const char* str, size_t size) = 0;
+    virtual void set_body(std::string&& body) { set_body(body.c_str(), body.length()); }
     void         set_body(const std::string& body) { set_body(body.c_str(), body.length()); }
     void         set_body(const std::string_view body) { set_body(body.data(), body.length()); }
   };
@@ -19,7 +20,10 @@ namespace Crails
   class RenderString : public RenderTarget
   {
   public:
-    void set_body(const char* str, std::size_t size) { body = std::string(str, size); }
+    void set_body(const char* str, std::size_t size) override { body = std::string(str, size); }
+    void set_body(std::string&& value) override { body = std::move(value); }
+    void set_body(const std::string& body) { set_body(body.c_str(), body.length()); }
+    void set_body(const std::string_view body) { set_body(body.data(), body.length()); }
     std::string_view value() const { return std::string_view(body.c_str(), body.length()); }
     const char* c_str() const { return body.c_str(); }
     std::size_t length() const { return body.length(); }
@@ -33,6 +37,8 @@ namespace Crails
   public:
     RenderStream(std::ostream& a) : sink(a) {}
     void set_body(const char* str, size_t size) override { sink << std::string_view(str, size); }
+    void set_body(const std::string& body) { set_body(body.c_str(), body.length()); }
+    void set_body(const std::string_view body) { set_body(body.data(), body.length()); }
   };
 }
 
