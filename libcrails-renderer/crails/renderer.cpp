@@ -1,17 +1,24 @@
-#include <iostream>
 #include <crails/logger.hpp>
 #include <crails/utils/split.hpp>
 #include <crails/utils/join.hpp>
+#include <algorithm>
+#include <vector>
 #include "renderer.hpp"
 
 using namespace Crails;
 using namespace std;
 
+struct AcceptedFormat
+{
+  string mimetype;
+  double q;
+  bool operator>(const AcceptedFormat& b) { return q > b.q; }
+  bool operator<(const AcceptedFormat& b) { return q < b.q; }
+};
+
 static bool find_in_string(const string& a, const string& b)
 {
-  int index = a.find(b);
-
-  return index >= 0 && index < a.length();
+  return a.find(b) != string::npos;
 }
 
 static string get_format(const string& format, const string& default_format)
@@ -19,6 +26,56 @@ static string get_format(const string& format, const string& default_format)
   if (format.length() == 0)
     logger << Logger::Debug << "Renderer: get_format: query did not include a format, using default: " << default_format << Logger::endl;
   return format.length() == 0 ? default_format : format;
+}
+
+static string trim(const string& value)
+{
+  size_t begin = value.find_first_not_of(" \t");
+  size_t end = value.find_last_not_of(" \t");
+
+  if (begin == string::npos)
+    return "";
+  return value.substr(begin, end - begin + 1);
+}
+
+static AcceptedFormat parse_accepted_format(const string& token)
+{
+  AcceptedFormat result{"", 1.0};
+  size_t semicolon = token.find(';');
+
+  result.mimetype = trim(semicolon == string::npos ? token : token.substr(0, semicolon));
+  if (semicolon != string::npos)
+  {
+    for (const string& parameter : split(token.substr(semicolon + 1), ';'))
+    {
+      string trimmed = trim(parameter);
+
+      if (trimmed.size() > 2 && trimmed[0] == 'q' && trimmed[1] == '=')
+      {
+        try { result.q = std::stod(trimmed.substr(2)); }
+        catch (const std::exception&) { result.q = 1.0; }
+      }
+    }
+  }
+  return result;
+}
+
+static list<string> parse_accept_header(const string& accept)
+{
+  vector<AcceptedFormat> parsed;
+  list<string> result;
+
+  for (const string& raw_format : split(accept, ','))
+  {
+    AcceptedFormat format = parse_accepted_format(raw_format);
+
+    if (format.mimetype.length() > 0 && format.q > 0.0)
+      parsed.push_back(format);
+  }
+  std::stable_sort(parsed.begin(), parsed.end());
+  for (const AcceptedFormat& format : parsed)
+    result.push_back(format.mimetype);
+  return result;
 }
 
 static bool match_mimetype_strict(const string& mimetype, const string& format)
@@ -81,13 +138,14 @@ void Renderer::render(const std::string& view, const string& accept, RenderTarge
 const Renderer* Renderer::pick_renderer(const string& view, const string& accept)
 {
   const Renderers* renderers = Renderers::singleton::get();
-  list<string> accepted_formats;
   string format;
+  list<string> accepted_formats;
 
   if (!renderers)
     throw boost_ext::runtime_error("Crails::Renderers singleton hasn't been initialized.");
   format = get_format(accept, renderers->get_default_format());
-  for (const string& accepted_format : split(format, ','))
+  accepted_formats = parse_accept_header(format);
+  for (const string& accepted_format : accepted_formats)
   {
     for (MimetypeMatcher matcher : mimetype_matchers)
     {
