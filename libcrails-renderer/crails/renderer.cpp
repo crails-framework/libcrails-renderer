@@ -12,8 +12,8 @@ struct AcceptedFormat
 {
   string mimetype;
   double q;
-  bool operator>(const AcceptedFormat& b) { return q > b.q; }
-  bool operator<(const AcceptedFormat& b) { return q < b.q; }
+  bool operator>(const AcceptedFormat& b) const { return q > b.q; }
+  bool operator<(const AcceptedFormat& b) const { return q < b.q; }
 };
 
 static bool find_in_string(const string& a, const string& b)
