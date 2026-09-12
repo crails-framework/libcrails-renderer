@@ -72,7 +72,7 @@ static list<string> parse_accept_header(const string& accept)
     if (format.mimetype.length() > 0 && format.q > 0.0)
       parsed.push_back(format);
   }
-  std::stable_sort(parsed.begin(), parsed.end());
+  std::stable_sort(parsed.begin(), parsed.end(), std::greater<AcceptedFormat>{});
   for (const AcceptedFormat& format : parsed)
     result.push_back(format.mimetype);
   return result;
