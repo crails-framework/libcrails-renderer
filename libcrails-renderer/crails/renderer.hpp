@@ -17,8 +17,8 @@ namespace Crails
 
   struct MissingTemplate : public boost_ext::exception
   {
-    MissingTemplate(const std::string& name, const std::string& accept, const Renderer* = nullptr);
-    MissingTemplate(const std::string& name, const Renderer* = nullptr);
+    MissingTemplate(const std::string_view name, const std::string_view accept, const Renderer* = nullptr);
+    MissingTemplate(const std::string_view name, const Renderer* = nullptr);
 
     const char* what() const throw() { return message.c_str(); }
     void debug() const;
@@ -55,14 +55,14 @@ namespace Crails
     virtual ~Renderer() {}
     virtual std::string_view get_name() const = 0;
     virtual const std::vector<std::string>& get_mimetypes() const = 0;
-    virtual bool can_render(const std::string& view) const;
-    virtual void render_template(const std::string& view, RenderTarget&, SharedVars& vars) const = 0;
+    virtual bool can_render(const std::string_view view) const;
+    virtual void render_template(const std::string_view view, RenderTarget&, SharedVars& vars) const = 0;
     const Templates& get_templates() const { return templates; }
     void merge(const Renderer&);
 
-    static const Renderer* pick_renderer(const std::string& view, const std::string& accept);
-    static bool            has_renderer(const std::string& view, const std::string& accept);
-    static void            render(const std::string& view, const std::string& accept, RenderTarget&, SharedVars& vars);
+    static const Renderer* pick_renderer(const std::string_view view, const std::string_view accept);
+    static bool            has_renderer(const std::string_view view, const std::string_view accept);
+    static void            render(const std::string_view view, const std::string_view accept, RenderTarget&, SharedVars& vars);
 
   protected:
     Templates templates;
