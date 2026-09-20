@@ -28,6 +28,7 @@ namespace Crails
     std::string_view value() const { return std::string_view(body.c_str(), body.length()); }
     const char* c_str() const { return body.c_str(); }
     std::size_t length() const { return body.length(); }
+    [[nodiscard]] std::string extract() && { return std::move(body); }
   private:
     std::string body;
   };
