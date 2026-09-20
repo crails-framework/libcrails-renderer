@@ -50,7 +50,7 @@ namespace Crails
     friend class MissingTemplate;
   protected:
     typedef void (*Generator)(const Renderer&, RenderTarget&, SharedVars&);
-    typedef std::map<std::string, Generator> Templates;
+    typedef std::map<std::string_view, Generator> Templates;
   public:
     virtual ~Renderer() {}
     virtual std::string_view get_name() const = 0;
